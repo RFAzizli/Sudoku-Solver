@@ -118,7 +118,12 @@ public class Field {
         for(int i=0;i<this.dim;i++){
             for(int j=0;j<this.dim;j++){
                 int val=input.nextInt();
-                this.place(val,i,j);
+                boolean added=this.place(val,i,j);
+                if(!added){
+                    // reset the field if can't place a value while reading from the file
+                    this.reset();
+                    throw new IllegalArguementException("The file contains a wrong field");
+                }
                 if(val!=0){
                     this.isFixed[i][j]=true;
                 }
@@ -148,6 +153,16 @@ public class Field {
      */
     public boolean colHasVal(int col,int val){
         return this.colHasValue[col][val-1];
+    }
+    /*
+        reset() - method that is called only when the file containing the field, is wrong, i.e. has a wrong field, i.e. two same numbers on same cols, rows, subgrids.
+    */
+    private void reset(){
+        this.values=new int[this.dim][this.dim];
+        this.isFixed=new boolean[this.dim][this.dim];
+        this.subGridHasValue=new boolean[this.subDim][this.subDim][this.dim];
+        this.rowHasValue=new boolean[this.dim][this.dim];
+        this.colHasValue=new boolean[this.dim][this.dim];
     }
     /*
         toString() - overridden method from Object class that returns a string that shows us the Sudoku field.
